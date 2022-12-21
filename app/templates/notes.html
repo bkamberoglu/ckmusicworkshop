@@ -1,0 +1,120 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+    <div class="row">
+        <div>
+            <h1>Musical Notes</h1>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div>
+            {% if MusicalNotes !=[] %}  
+                <div class="row divider blue">
+                    <div class="col-md-12"></div>
+                </div>
+            {% endif %}
+            {% include 'flash.html' %}
+
+            {% if MusicalNotes !=[] %}  
+                <h3>Musical Notes</h3>
+                <table id="musicalNotes" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Compiler</th>
+                            <th>Source</th>
+                            <th>Region</th>
+                            <th>NoteType</th>
+                            <th>Level</th>
+                            {%if currentUser != None and currentUser.isAdmin ==True%}<th>Actions</th>{%endif%}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for musicalNote in musicalNotes %}
+                            <tr>
+                                <td>{{musicalNote.id}}</td>
+                                <td>{{musicalNote.name}}</td>
+                                <td>{{musicalNote.compiler}}</td>
+                                <td>{{musicalNote.source}}</td>
+                                <td>{{musicalNote.region}}</td>
+                                <td>{{musicalNote.noteType}}</td>
+                                <td>{{musicalNote.level}}</td>
+                                {%if currentUser != None and currentUser.isAdmin ==True%}
+                                <td>
+                                    <form action="{{url_for('deleteNote', musicalNote_id = musicalNote.id)}}" method="post">
+                                    <button type="submit" name="delete" class="btn btn-danger">Delete</button>
+                                </td>
+                                {%endif%}
+                            </form>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        
+            <div class="row divider blue">
+                <div class="col-md-12"></div>
+            </div>
+
+            <form action="{{ url_for('showNotes')}}" method = "post" class="form-inline" role="form" {%if currentUser == None or currentUser.isAdmin ==False%}style="display: none;"{%endif%}>
+            
+                <h3>New Note</h3>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type ="text" class="form-control" name="name">
+
+                    <label for="compiler">Compiler:</label>
+                    <input type ="text" class="form-control" name="compiler">
+
+                    <label for="source">Source:</label>
+                    <input type="source" name="source">           
+                    <label for="region">Region:</label>
+                    <input class="form-control" id="region" name="region" />
+
+                    <label for="noteType">Note Type:</label>
+                    <select class="form-control" id="noteType" name="noteType" required>
+                        <option id="none" value="">-- Select --</option>
+                        <option id="excercise" value="Excercise">Excercise</option>
+                        <option id="hicaz" value="Hicaz">Hicaz</option>
+                        <option id="huseyni" value="Huseyni">Huseyni</option>
+                        <option id="general" value="General">General</option>
+                        <option id="kurdi" value="Kurdi">Kurdi</option>
+                        <option id="rast" value="Rast">Rast</option>
+                        <option id="saba" value="Saba">Saba</option>
+                        <option id="sabaZemzeme" value="Saba Zemzeme">Saba Zemzeme</option>
+                    </select>
+                    <label for="level">Level:</label>
+                    <input type="number" id="level" name="level" min="1" max="10" step="1" required></input>
+
+                    <label for="image">Note:</label>
+                    <a href="#selectAFile" target="_blank">
+                    <input class="form-control filestyle" type="file" id="selectAFile" name="selectAFile" data-buttonText="Select a File" data-placeholder="No file" data-buttonName="btn-info"></a>
+                        <a href="/static/notes/YolVerDaglar.pdf" target="_blank">PDF</a>
+        
+                </div>
+                <br/>
+                <br/>
+    
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success" id="addAndSave" name="addAndSave" 
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Add and Save</button>
+                </div>
+            </form>
+            <a href = '{{url_for('showActiveStudents')}}'>
+                <button class="btn btn-danger delete">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+            </a>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#musicalNotes').DataTable();
+                
+            } );
+        </script>
+    
+    </div>
+{% endblock %}

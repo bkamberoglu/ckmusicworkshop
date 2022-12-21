@@ -1,0 +1,47 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+
+    <div class="row">
+            
+        <h3>Logged In Users</h3>
+        <table id="allLoggedInUsers" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Provider</th>
+                    <th>Picture</th>
+                    <th>Number Of Times Logged In</th>
+                    <th>Last Seen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{user.name}}</td>
+                        <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+                        <td>{{user.provider}}</td>
+                        <td><a href={{user.picture}} target="_blank">View Picture</a></td>
+                        <td>{{user.numberOfTimesLoggedIn}}</td><p>last :{{moment(user.lastSeen).format('L')}}</p>
+                        <td>{{ moment(user.lastSeen).format('MMMM Do YYYY, h:mm:ss a') }}</td>
+
+                       
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#allLoggedInUsers').dataTable( {
+                     "order": [[ 4, "desc" ]]
+                } );
+            } );
+        </script>
+
+    </div>
+{% endblock %}

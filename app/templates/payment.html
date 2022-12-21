@@ -1,0 +1,94 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+    <div class="row">
+        <div>
+            <h1>Payment for {{student.firstName}} {{student.lastName}}</h1>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div>
+            {% if payments !=[] %}  
+                <div class="row divider blue">
+                    <div class="col-md-12"></div>
+                </div>
+            {% endif %}
+            {% include 'flash.html' %}
+
+            {% if payments !=[] %}  
+                <h3>Payment Information</h3>
+                <table id="payments" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Amount</th>
+                            <th>Paid Month</th>
+                            <th>Payment Date</th>
+                            <th>Payment Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in payments %}
+                            <tr>
+                                <td>{{payment.amount}}</td>
+                                <td>{{payment.paidMonth}}</td>
+                                <td>{{payment.paymentDate}}</td>
+                                <td>{{payment.paymentType}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+            
+            <div class="row divider blue">
+                <div class="col-md-12"></div>
+            </div>
+
+            <form action="{{ url_for('addPayment',student_id = student.id)}}" method = "post" class="form-inline" role="form"
+                {%if currentUser.isAdmin ==False or student.isActive == False%}style="display: none;"{%endif%}>
+            
+                <h3>New Payment</h3>
+                <label for="amount">Amount:</label>
+                <div class="form-group">
+                        <div class="form-group-addon">TL</div>
+                            <input type ="text" class="form-control" maxlength="10" size="10" name="amount" required></input>
+                        </div>              
+
+                    <label for="paidMonth">Paid Month:</label>
+                    <input type="month" name="paidMonth" required></input>          
+                    <label for="paymentDate">Payment Date:</label>
+                    <input class="form-control" id="paymentDate" type="date" name="paymentDate"></input>
+
+                    <label for="paymentType">Payment Type:</label>
+                    <select class="form-control" id="paymentType" name="paymentType" required>
+                        <option id="none" value="">-- Select --</option>
+                        <option id="bt" value="Bank Transfer">Bank Transfer</option>
+                        <option id="ca" value="Cash">Cash</option>
+                        <option id="ch" value="Check">Check</option>
+                        <option id="cc" value="Credit Card">Credit Card</option>
+                        <option id="pp" value="PayPal">PayPal</option>
+                    </select>
+                </div>
+                <br/>
+                <br/>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success" id="addAndSave" name="addAndSave" {%if currentUser.isAdmin ==False or student.isActive == False%}style="display: none;"{%endif%}>
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Add and Save</button>
+                </div>
+            </form>
+            <a href = '{{url_for('showActiveStudents')}}'>
+                <button class="btn btn-danger delete">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+            </a>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#payments').DataTable();
+                document.getElementById('paymentDate').valueAsDate = new Date()
+            })
+        </script>
+    
+    </div>
+{% endblock %}

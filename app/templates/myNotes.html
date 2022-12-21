@@ -1,0 +1,229 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+    <div class="row">
+        <div>
+            <h1>Musical Notes for {{student.firstName}} {{student.lastName}}</h1>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div>
+            {% if MusicalNotes !=[] %}  
+                <div class="row divider blue">
+                    <div class="col-md-12"></div>
+                </div>
+            {% endif %}
+            {% include 'flash.html' %}
+
+            <h3>My Musical Notes</h3>
+            <table id="myMusicalNotes" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Compiler</th>
+                        <th>Source</th>
+                        <th>Region</th>
+                        <th>NoteType</th>
+                        <th>Level</th>
+                        <th>Given Date</th>
+                        {%if currentUser.isAdmin ==True and student.isActive == True %}<th>Action</th>{% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for musicalNote in myMusicalNotes %}
+                        <tr>
+                            <td>{{musicalNote.musicalNote.name}}</td>
+                            <td>{{musicalNote.musicalNote.compiler}}</td>
+                            <td>{{musicalNote.musicalNote.source}}</td>
+                            <td>{{musicalNote.musicalNote.region}}</td>
+                            <td>{{musicalNote.musicalNote.noteType}}</td>
+                            <td>{{musicalNote.musicalNote.level}}</td>
+                            <td>{{musicalNote.givenDate}}</td>
+                            {%if currentUser.isAdmin ==True and student.isActive == True%}
+                            <td>
+                                <form action="{{ url_for('deleteMyNote', student_id = student.id, musicalNote_id = musicalNote.musicalNote.id)}}" method="post"> 
+                                 <button type="submit" name="delete" class="btn btn-danger">Delete</button> 
+                       
+                               <!-- <button type="button" name="delete" class="btn btn-danger">Delete</button> -->
+                            </form>
+                            </td>
+                            {%endif%}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div class="row divider blue">
+                <div class="col-md-12"></div>
+            </div>
+          
+            <div class="form-group" {% if currentUser.isAdmin == False %}style="display: none;"{% endif %} >
+                <br />
+                <br />
+                <a href = "{{ url_for('showMyNotes', student_id = student.id, displayAll = 1 )}}">
+                    <button type="button" class="btn btn-info" >Display All Musical Notes</button></a>
+                 <br />
+            </div>
+               
+           
+            <h3>Not Given Musical Notes</h3>
+            <table id="notSelectedMusicalNotes" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Region</th>
+                        <th>NoteType</th>
+                        <th>Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notSelectedMusicalNote in notSelectedMusicalNotes %}
+                        <tr>
+                            <td>{{notSelectedMusicalNote.id}}</td>
+                            <td>{{notSelectedMusicalNote.name}}</td>
+                            <td>{{notSelectedMusicalNote.region}}</td>
+                            <td>{{notSelectedMusicalNote.noteType}}</td>
+                            <td>{{notSelectedMusicalNote.level}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+           
+            <button id="move" name="move" class="btn btn-info btn-lg" {% if student.isActive == False or currentUser.isAdmin ==False %}style="display: none;"{% endif %}>
+                    <span class="glyphicon glyphicon-resize-vertical" aria-hidden="true"></span>Move</button>
+            <br />
+            <br />
+            <div class="form-group" {% if student.isActive == False or currentUser.isAdmin == False %}style="display: none;"{%endif%}>
+            <h3>Today Given Musical Notes</h3>
+            <table id="notSelectedMusicalNotes2" name="notSelectedMusicalNotes2" class="table table-striped table-bordered" cellspacing="0" width="100%" {%if currentUser.isAdmin ==False%}style="display: none;"{%endif%}>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Region</th>
+                        <th>NoteType</th>
+                        <th>Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notSelectedMusicalNote in notSelectedMusicalNotes2 %}
+                        <tr>
+                            <td>{{notSelectedMusicalNote.id}}</td>
+                            <td>{{notSelectedMusicalNote.name}}</td>
+                            <td>{{notSelectedMusicalNote.region}}</td>
+                            <td>{{notSelectedMusicalNote.noteType}}</td>
+                            <td>{{notSelectedMusicalNote.level}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success" id="save" name="save" 
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Save</button>
+            </div>
+        </div>
+            
+            <a href = '{{url_for('showActiveStudents')}}'>
+                <button class="btn btn-danger delete">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+            </a>
+       
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function() {
+
+                $('#myMusicalNotes').DataTable({
+                    "order": [[ 6, "desc" ]]
+                });
+
+               
+
+                var table = $('#notSelectedMusicalNotes').DataTable({"order": [[ 4, "desc" ]]});
+                var table2 = $('#notSelectedMusicalNotes2').DataTable();
+                
+
+                table.column( 0 ).visible( false );
+                table2.column( 0 ).visible( false );
+
+ 
+                $('#notSelectedMusicalNotes tbody').on( 'click', 'tr', function () {
+                    $(this).toggleClass('selected');
+                });
+
+                $('#notSelectedMusicalNotes2 tbody').on( 'click', 'tr', function () {
+                    $(this).toggleClass('selected');
+                });
+
+                $('#move').click(function() {
+                    var rows = table.rows('.selected').data();
+                    var rows2 = table2.rows('.selected').data();
+                    var i;
+                    if (rows.length > 0) {
+                        for (i = 0; i < rows.length; i++) {
+                            table2.row.add( [
+                                rows[i][0], rows[i][1], rows[i][2], rows[i][3], rows[i][4]
+                            ] ).draw( false );
+                        }
+                        table.rows('.selected')
+                        .remove()
+                        .draw();
+                    }
+                    if (rows2.length > 0) {
+                        
+                        for (i = 0; i < rows2.length; i++) {
+                            table.row.add( [
+                                rows2[i][0], rows2[i][1], rows2[i][2], rows2[i][3], rows2[i][4]
+                            ] ).draw( false );
+                        }
+                        table2.rows('.selected')
+                        .remove()
+                        .draw();
+                    }
+
+                });
+        
+    
+                $('#save').click(function() {
+                    var info = [];
+                    var rows = table2.rows().data()
+                    for (i = 0; i < rows.length; i++) {
+                        console.log(rows[i][0])
+                        info.push(rows[i][0]);
+                    }
+                    console.log('Student ID: ', {{student.id}})
+                    console.log(info)                    
+                    $.ajax({
+                        url: '/addMyNotes?student_id={{student.id}}&data=' + info ,
+                        type: 'POST',
+                        contentType: 'application/octet-stream; charset=utf-8', 
+                        data: {"data":info},
+                        processData: false,
+
+                        success: function( data, textStatus, jQxhr ) {
+                            console.log('I am in success');
+                            setTimeout(function() {
+                            window.location.href = "/mynotes/{{student.id}}/displayAll/0";
+                            }, 1000);
+                            
+                            console.log( data );
+                            console.log( textStatus );
+                            console.log( jQxhr );
+                        },
+                        error: function( jqXhr, textStatus, errorThrown ) {
+                            console.log( jqXhr );
+                            console.log( textStatus );
+                            console.log( errorThrown );
+                        }
+                    });
+                });
+            });
+         
+        </script>
+    
+    </div>
+{% endblock %}

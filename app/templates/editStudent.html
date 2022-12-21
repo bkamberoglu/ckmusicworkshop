@@ -1,0 +1,295 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<!--
+	<div class="row divider blue">
+		<div class="col-md-12"></div>
+	</div>
+-->
+<!--	<div class="row banner menu"> -->
+	<div class="row">
+		<div>
+			<h1>Edit {{student.firstName}}</h1>
+		</div>
+	</div> 
+
+	
+	<div class="row">
+		<div>
+				<div class="row divider blue">
+					<div class="col-md-12"></div>
+				</div>
+			<!-- <form action="#" method = "post"> -->
+			<form action="{{ url_for('editStudent',id = student.id)}}" method = "post" class="form-inline" role="form">
+				
+				<div class="form-group">
+					<h3>Student Information</h3>
+				</div>	
+				<br/>
+				<br/>
+				<div class="form-group">
+					<div class="checkbox">
+  						<input type="checkbox" name="isActive" id="isActive" {%if student.isActive ==True%}checked{%endif%} 
+  							{%if currentUser.isAdmin == False%}disabled{%endif%}></input>
+  						<label for="isActive">Active:</label>
+					</div>
+				</div>	
+				<br/>
+				<br/>
+				<div class="form-group">
+					<label for="title">Title:</label>
+					<select class="form-control" id="title" name="title" required>
+						<option id="none" value="">-- Select --</option>
+  						<option id="mr" value="Mr">Mr</option>
+  						<option id="mrs" value="Mrs">Mrs</option>
+  						<option id="miss" value="Miss">Miss</option>
+  						<option id="ms" value="Ms">Ms</option>
+					</select>
+					<label for="firstName">First Name:</label>
+					<input type ="text" maxlength="25" size="30" class="form-control" name="firstName"
+						value="{{student.firstName}}" required ></input> 
+
+					<label for="middleName">Middle Name:</label>
+					<input class="form-control" maxlength="25" size="30" name="middleName" value="{{student.middleName}}"></input>	
+			
+					<label for="lastName">Last Name:</label>
+					<input class="form-control" maxlength="25" size="30" name="lastName" value="{{student.lastName}}" required></input>
+					</input>
+				</div>
+				<br/>
+				<br/>
+				<div class="form-group">
+					<label for="telephoneNumber">Telephone Number:</label>
+					<input class="form-control" maxlength="25" size="25" name="telephoneNumber" value="{{student.telephoneNumber}}">
+					</input>
+
+					<label for="mobilePhoneNumber">Mobile Phone Number:</label>
+					<input class="form-control" name="mobilePhoneNumber" value="{{student.mobilePhoneNumber}}"></input>
+
+					<label for="faxNumber">Fax Number:</label>
+					<input class="form-control" maxlength="25" name="faxNumber" value="{{student.faxNumber}}"></input>
+				</div>
+				<br/>
+				<br/>
+				<div class="form-group">
+					<label for="otherNumber">Other Number:</label>
+					<input class="form-control" maxlength="25" name="otherNumber" value="{{student.otherNumber}}"></input>
+
+					<label for="emailAddress">Email Address:</label>
+					<input class="form-control" maxlength="25" size="25" type="email" name="emailAddress" 
+						value="{{student.emailAddress}}"></input>
+
+					<label for="alternateEmailAddress">Alternate Email Address:</label>
+					<input class="form-control" type="email" maxlength="25" size="25" name="alternateEmailAddress" 
+						value="{{student.alternateEmailAddress}}"></input>
+				</div>
+				<br/>
+				<br/>
+				<div class="form-group">
+					<label for="dateOfBirth">Date Of Birth:</label>
+					<input class="form-control" type="date" name="dateOfBirth" value="{{student.dateOfBirth}}"></input>
+
+					<label for="gender">Gender:</label>
+					<select class="form-control" id="gender" name="gender" selected="{{student.gender}}">
+  						<option id="female" value="F">Female</option>
+  						<option id="male" value="M">Male</option>
+  						<option id="unknown" value="U">Unknown</option>
+					</select>
+					<label for="level">Level:</label>
+        			<input type="number" id="level" name="level" min="1" max="10" step="1" value="{{student.level}}" required
+        				{%if currentUser.isAdmin == False%}disabled{%endif%}></input>
+				</div>	
+
+				<br/>
+				<br/>
+				<div class="form-group">
+					<label for="courseDay">Course Day:</label>
+					<select class="form-control" id="courseDay" name="courseDay" selected="{{student.courseDay}}" required 
+						{%if currentUser.isAdmin == False%}disabled{%endif%}>
+						<option id="none" value="">-- Select --</option>
+  						<option id="mon" value="Mon">Mon</option>
+  						<option id="tue" value="Tue">Tue</option>
+  						<option id="wen" value="Wen">Wen</option>
+  						<option id="thu" value="Thu">Thu</option>
+  						<option id="fri" value="Fri">Fri</option>
+  						<option id="sat" value="Sat">Sat</option>
+  						<option id="sun" value="Sun">Sun</option>
+					</select>
+
+					<div class='input-group date' id='courseStartTime'>
+                		<label for="courseStartTime">Course Start Time:</label>
+                    	<input type='text' class="form-control" name="courseStartTime" value="{{student.courseStartTime}}" required
+                    		{%if currentUser.isAdmin == False%}disabled{%endif%}></input>
+                    	<span class="input-group-addon">
+                        	<span class="glyphicon glyphicon-time"></span>
+                    	</span>
+                	</div>
+
+                	<div class='input-group date' id='courseEndTime'>
+                		<label for="courseEndTime">Course End Time:</label>
+                    	<input type='text' class="form-control" name="courseEndTime" value="{{student.courseEndTime}}" required
+                    		{%if currentUser.isAdmin == False%}disabled{%endif%}></input>
+                    	<span class="input-group-addon">
+                        	<span class="glyphicon glyphicon-time"></span>
+                    	</span>
+                	</div>
+				</div>
+				<br/>
+				<br/>				
+				<div class="form-group">
+					<label for="comment">Comment:</label>
+					<textarea class="form-control" maxlength="250" rows="3" cols="75" name="comment">{{student.comment}}
+					</textarea>
+				</div>
+				<br/>
+				<br/>	
+				<div class="row divider blue">
+					<div class="col-md-12"></div>
+				</div>
+				<div class="form-group">
+					<h3>Student Address</h3>
+				
+					<label for="addressType">Address Type:</label>
+					<select class="form-control" id="addressType" name="addressType" selected="{{student.address.addressType}}" required>
+						<option id="none" value="">-- Select --</option>
+  						<option id="business" value="B">Business</option>
+  						<option id="custom" value="C">Custom</option>
+  						<option id="mailing" value="M">Mailing</option>
+  						<option id="primary" value="P">Primary</option>
+					</select>
+				</div>
+				<br/>
+				<br/>
+				<div class="form-group">
+					<label for="streetAddress1">Street Address1:</label>
+					<input class="form-control" maxlength="150" size="150" name="streetAddress1" 
+						value="{{student.address.streetAddress1}}"></input>
+					<br/>
+					<br/>
+					<label for="streetAddress2">Street Address2:</label>
+					<input class="form-control" maxlength="150" size="150" name="streetAddress2" 
+						value="{{student.address.streetAddress2}}"></input>
+				</div>
+				<br/>
+				<br/>
+				<div class="form-group">
+					<label for="city">City:</label>
+					<input class="form-control" maxlength="50" size="50" name="city" value="{{student.address.city}}" required></input>
+
+					<label for="province">Province:</label>
+					<input class="form-control" maxlength="50" size="50" name="province" value="{{student.address.province}}"></input>
+				</div>
+				<br/>
+				<br/>
+				<div class="form-group">
+					<label for="postalCode">Postal Code:</label>
+					<input class="form-control" maxlength="10" size="10" name="postalCode" value="{{student.address.postalCode}}">
+					</input>
+
+					<label for="country">Country:</label>
+					<input class="form-control" maxlength="50" size="50" name="country" value="{{student.address.country}}"></input>
+
+					<label for="pobox">PObox:</label>
+					<input class="form-control" maxlength="20" size="20" name="pobox" value="{{student.address.pobox}}"></input>
+				</div>
+				<br/>
+				<br/>
+				<div class="row divider blue">
+					<div class="col-md-12"></div>
+				</div>
+					
+
+				<div class="form-group">
+					<h3>Student Attend History</h3>
+					<table id="studentAttendHistory" class="table table-striped table-bordered" cellspacing="0" width="100%">
+	        			<thead>
+				            <tr>
+				            	<th>Start Date</th>
+				                <th>End Date</th>
+				            </tr>
+	        			</thead>
+
+	        			<tbody>
+				        	{% for studentAttendHistory in studentAttendHistories %}
+				        	 <tr>
+				            	<td>{{studentAttendHistory.startDate}}</td>
+				            	<td>{% if studentAttendHistory.endDate != None %} 
+				            			{{studentAttendHistory.endDate}}
+				            		{% endif %}
+				            	</td>
+				            </tr>
+				           
+				            {% endfor %}
+	           
+	        			</tbody>
+    				</table>
+				</div>
+				<br/>
+				<br/>
+				<div class="row divider blue">
+					<div class="col-md-12"></div>
+				</div>
+				<div class="form-group">
+					<h3>Student Last Update Information:</h3>
+					<div>
+						<label for="lastUpdateBy">Last Update By:</label>{{student.user.name}} 
+					</div>
+					<div>
+						<label for="email">Email:</label>{{student.user.email}}
+					</div>
+					<div>
+						<label for="lastUpdate">Last Update Date:</label>{{student.lastUpdate}}
+					</div>
+				</div>
+				<div class="row divider blue">
+					<div class="col-md-12"></div>
+				</div>
+				<br/>
+				<br/>
+				<div class="form-group">
+					<button type="submit" class="btn btn-success" id="submit" type="submit">
+					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Save</button>
+				</div>
+			</form>
+			<a href = '{{url_for('showActiveStudents')}}'>
+				<button class="btn btn-danger delete">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Cancel</button>
+			</a>
+		</div>
+		<script type="text/javascript">
+            $(document).ready(function() {
+
+				$("#title").find('option').each(function( i, opt ) {            		
+    				if( opt.value === '{{student.title}}' ) {
+        				$(opt).attr('selected', 'selected');
+        			}
+				});
+
+            	$("#courseDay").find('option').each(function( i, opt ) {            		
+    				if( opt.value === '{{student.courseDay}}' ) {
+        				$(opt).attr('selected', 'selected');
+        			}
+				});
+
+				$("#addressType").find('option').each(function( i, opt ) {            		
+    				if( opt.value === '{{student.address.addressType}}' ) {
+        				$(opt).attr('selected', 'selected');
+        			}
+				});
+
+				$("#gender").find('option').each(function( i, opt ) {            		
+    				if( opt.value === '{{student.gender}}' ) {
+        				$(opt).attr('selected', 'selected');
+        			}
+				});
+
+                $('#courseStartTime').datetimepicker({
+                   	format: 'LT'
+                });
+                $('#courseEndTime').datetimepicker({
+                    format: 'LT'
+                });
+            });
+        </script>
+	</div>
+{% endblock %}

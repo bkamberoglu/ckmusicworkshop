@@ -1,0 +1,124 @@
+{% extends "contactMain.html" %}
+{% block content %}
+{% include "header.html" %}
+
+    <div class="row">
+        <div>
+            <h1>Contact Us</h1>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div> 
+            {% include 'flash.html' %}
+            
+            <div class="row divider blue">
+                <div class="col-md-12"></div>
+            </div>
+            
+            <div class="form-group">
+                <samp>
+                    <strong>Cengiz Kurt Music Workshop</strong><br>
+                    <strong>Address: </strong>Kocatepe, Hatay Sk. No:12, 06420 Çankaya/Ankara Turkiye<br>
+                    <strong>Phone: </strong>+90 312 418 8778<br>
+                </samp>
+            </div>
+
+            <div class="container">
+
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="text-muted"><strong>*</strong> These fields are required.</p>
+                        </div>
+                    </div>
+
+                    <form id="contact-form" action="{{url_for('contactUs')}}" method="post" role="form">
+                        <div class="controls">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="firstName">First Name *</label>
+                                        <input id="firstName" type="text" name="firstName" class="form-control" placeholder="Please enter your firstname *" required="required">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="lastName">Last Name *</label>
+                                        <input id="lastName" type="text" name="lastName" class="form-control" placeholder="Please enter your lastname *" required="required">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="emailAddress">Email *</label>
+                                        <input id="emailAddress" type="email" name="emailAddress" class="form-control" placeholder="Please enter your email *" required="required">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="phone">Phone</label>
+                                        <input id="phone" type="tel" name="phone" class="form-control" placeholder="Please enter your phone">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="form_message">Message *</label>
+                                        <textarea id="message" name="message" class="form-control" placeholder="Message for me *" rows="4" required="required"></textarea>
+                                    </div>
+                                </div>
+                                <br/>
+                                <br/>
+                                <div class="col-md-12">
+                                    <div id="recaptcha" class="g-recaptcha" 
+                                        data-sitekey="{{grecaptchaSitekey}}"></div>
+                                </div>
+                                <br/>
+                                <br/>
+                                <div class="col-md-12">
+                                    <input id ="sendMessage" type="submit" class="btn btn-success btn-send" value="Send message">
+                                    <input type="reset" onclick="expCallback()" class="btn btn-success btn-send" value="Clear">
+                                        <span class="form-control-clear glyphicon glyphicon-remove form-control-feedback hidden">
+                                        </span>
+                                    </input>
+                                </div>
+                            </div>
+                            
+                            <br>
+                             <div id="map"></div>
+                        </div>
+
+                    </form>
+
+                </div><!-- /.8 -->
+            </div> <!-- /.row-->
+        </div> <!-- /.container-->
+        </div>
+        <script type="text/javascript">
+  
+            var verifyCallback = function(response) {
+                sendMessage.disabled = false;
+            };
+            var expCallback = function() {
+                sendMessage.disabled = true;
+                grecaptcha.reset();
+            };
+            var onloadCallback = function() {
+                sendMessage.disabled = true;
+                grecaptcha.render('recaptcha', {
+                    'sitekey' : '{{grecaptchaSitekey}}',
+                    'callback' : verifyCallback,
+                    'expired-callback': expCallback,
+                    'theme' : 'light'
+                    });
+                };
+       
+    </script>
+    </div>
+{% endblock %}
