@@ -37,7 +37,6 @@
 
 <script>
 function signInCallback(authResult) {
-  console.log('authResult =====> ', authResult['code'])
   if (authResult['code']) {
     // Hide the sign-in button now that the user is authorized
     $('#signinButton').attr('style', 'display: none');
@@ -50,7 +49,6 @@ function signInCallback(authResult) {
       contentType: 'application/octet-stream; charset=utf-8',
       success: function(result) {
         // Handle or verify the server response if necessary.
-        console.log('success result ====> ', result)
         if (result) {
           $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
          setTimeout(function() {
@@ -94,7 +92,6 @@ function signInCallback(authResult) {
   function sendTokenToServer() {
     var access_token = FB.getAuthResponse()['accessToken']; 
     FB.api('/me', function(response) {
-    console.log('Successful login for: ' + response.name + ' - ' + response.id);
      
      $.ajax({
       type: 'POST',
@@ -116,7 +113,6 @@ function signInCallback(authResult) {
         $('#result').html('Failed to make a server-side call. Check your configuration and console.');
          }
       }
-      
   });
     });
   }
